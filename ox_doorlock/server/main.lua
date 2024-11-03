@@ -241,25 +241,25 @@ local QBCore = exports['qb-core']:GetCoreObject()
 
 local function isAuthorised(playerId, door, lockpick)
     if not playerId or not tonumber(playerId) then
-        print("Error: playerId is nil or invalid in isAuthorised function")
+        --print("Error: playerId is nil or invalid in isAuthorised function")
         return false
     end
 
-    print("Door object:", json.encode(door))
+    --print("Door object:", json.encode(door))
 
     if Config.PlayerAceAuthorised and IsPlayerAceAllowed(playerId, 'command.doorlock') then
-        print("Player has ACE permission for command.doorlock")
+        --print("Player has ACE permission for command.doorlock")
         return true
     end
 
     if IsPlayerAceAllowed(playerId, ('doorlock.%s'):format(door.name)) then
-        print("Player has ACE permission for door:", door.name)
+        --print("Player has ACE permission for door:", door.name)
         return true
     end
 
     local player = QBCore.Functions.GetPlayer(playerId)
     if not player then
-        print("Error: Could not retrieve player object for playerId", playerId)
+        --print("Error: Could not retrieve player object for playerId", playerId)
         return false
     end
 
@@ -271,7 +271,7 @@ local function isAuthorised(playerId, door, lockpick)
         end
 
         if door.characters and table.contains(door.characters, player.PlayerData.citizenid) then
-            print("Player is authorized by citizen ID")
+            --print("Player is authorized by citizen ID")
             return true
         end
 
@@ -285,24 +285,24 @@ local function isAuthorised(playerId, door, lockpick)
         end
 
         -- Debugging: Confirm the updated `door.groups` structure
-        print("Door groups (after configuration):", json.encode(door.groups))
+        --print("Door groups (after configuration):", json.encode(door.groups))
 
         -- Check job and grade requirements
         local playerGrade = player.PlayerData.job.grade.level or player.PlayerData.job.grade
-        print("Player job:", player.PlayerData.job.name, "Grade:", playerGrade)
+        --print("Player job:", player.PlayerData.job.name, "Grade:", playerGrade)
 
         for _, group in ipairs(door.groups) do
             local jobName = group.name
             local requiredGrade = group.grade or 0
-            print("Checking against job group:", jobName, "with required minimum grade:", requiredGrade)
+            --print("Checking against job group:", jobName, "with required minimum grade:", requiredGrade)
 
             if player.PlayerData.job.name == jobName then
                 if playerGrade >= requiredGrade then
-                    print("Access granted: Player's grade", playerGrade, "meets required grade", requiredGrade)
+                    --print("Access granted: Player's grade", playerGrade, "meets required grade", requiredGrade)
                     authorised = true
                     break
                 else
-                    print("Access denied: Player's grade", playerGrade, "is below required grade", requiredGrade)
+                    --print("Access denied: Player's grade", playerGrade, "is below required grade", requiredGrade)
                 end
             end
         end
@@ -312,7 +312,7 @@ local function isAuthorised(playerId, door, lockpick)
         end
     end
 
-    print("Final authorization result:", authorised)
+    --print("Final authorization result:", authorised)
     return authorised
 end
 
